@@ -1,21 +1,31 @@
+/* Things to do:
+ View a list of book previews, by title and author, yo show new books to read.
+ An image associated with all book previews to recognize a book by the cover.
+ Option of reading a summary of the book.
+ Option of seeing the date that a book was published.
+ Find books based on specific text phrases.
+ Filter books by author.
+ Filter books by genre.
+ Toggle between dark and light modes.
+ */
+
 import { BOOKS_PER_PAGE, authors, genres, books} from "./data.js";
 
-const matches = books
+const matches = books;
 let page = 1;
 
 const day = {
-    dark: '10, 10, 20',
-    light: '255, 255, 255',
-}
+  dark: "10, 10, 20",
+  light: "255, 255, 255",
+};
 
 const night = {
-    dark: '255, 255, 255',
-    light: '10, 10, 20',
-}
+  dark: "255, 255, 255",
+  light: "10, 10, 20",
+};
 
-// if (!books && !Array.isArray(books)) throw new Error('Source required') 
+// if (!books && !Array.isArray(books)) throw new Error('Source required')
 // if (!range && range.length < 2) throw new Error('Range must be an array with two numbers')
-
 
 // fragment = document.createDocumentFragment()
 // const extracted = books.slice(0, 36)
@@ -111,10 +121,9 @@ const night = {
 //         if titleMatch && authorMatch && genreMatch => result.push(book)
 //     }
 
-//     if display.length < 1 
+//     if display.length < 1
 //     data-list-message.class.add('list__message_show')
 //     else data-list-message.class.remove('list__message_show')
-    
 
 //     data-list-items.innerHTML = ''
 //     const fragment = document.createDocumentFragment()
@@ -132,7 +141,7 @@ const night = {
 //                 class="preview__image"
 //                 src="${image}"
 //             />
-            
+
 //             <div class="preview__info">
 //                 <h3 class="preview__title">${title}</h3>
 //                 <div class="preview__author">${authors[authorId]}</div>
@@ -141,7 +150,7 @@ const night = {
 
 //         fragment.appendChild(element)
 //     }
-    
+
 //     data-list-items.appendChild(fragments)
 //     initial === matches.length - [page * BOOKS_PER_PAGE]
 //     remaining === hasRemaining ? initial : 0
@@ -172,17 +181,17 @@ const night = {
 //     for (node; pathArray; i++) {
 //         if active break;
 //         const previewId = node?.dataset?.preview
-    
+
 //         for (const singleBook of books) {
 //             if (singleBook.id === id) active = singleBook
-//         } 
+//         }
 //     }
-    
+
 //     if !active return
 //     data-list-active.open === true
 //     data-list-blur + data-list-image === active.image
 //     data-list-title === active.title
-    
+
 //     data-list-subtitle === '${authors[active.author]} (${Date(active.published).year})'
 //     data-list-description === active.description
 // }
