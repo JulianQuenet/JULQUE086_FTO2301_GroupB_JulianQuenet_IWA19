@@ -1,6 +1,6 @@
 /* Things to do:
- View a list of book previews, by title and author, yo show new books to read.
- An image associated with all book previews to recognize a book by the cover.
+ View a list of book previews, by title and author, show new books to read. //
+ An image associated with all book previews to recognize a book by the cover. //
  Option of reading a summary of the book.
  Option of seeing the date that a book was published.
  Find books based on specific text phrases.
@@ -9,10 +9,7 @@
  Toggle between dark and light modes.
  */
 
-import { BOOKS_PER_PAGE, authors, genres, books} from "./data.js";
-
-const matches = books;
-let page = 1;
+import { BOOKS_PER_PAGE, authors, genres, books } from "./data.js";
 
 const day = {
   dark: "10, 10, 20",
@@ -23,6 +20,84 @@ const night = {
   dark: "255, 255, 255",
   light: "10, 10, 20",
 };
+
+let currentPage = 1;
+
+const overlay = document.querySelector("[data-list-active]");
+const list = document.querySelector("[data-list-items]");
+
+const innerHTML = (x, y) => {
+  const booksElement = document.createElement("div");
+  booksElement.dataset.index = `${y}`;
+  booksElement.className = "preview";
+  booksElement.id = x.id;
+  booksElement.innerHTML = ` <img src = ${
+    x.image
+  } class = 'preview__image'  alt="${x.title} book image"></img>
+  <div class="preview__info">
+    <h3 class="preview__title">${x.title}</h3>
+    <div class="preview__author">${authors[x.author]}</div>
+    </div>`;
+  return booksElement;
+};
+
+books.forEach((book, index) => {
+  const bookElement = innerHTML(book, index);
+  list.appendChild(bookElement);
+});
+
+const previews = list.querySelectorAll(".preview"); // Getting all the books added to the DOM
+
+let loaded = 0;
+
+const moreBooks = BOOKS_PER_PAGE - 1;
+
+for (let i = 0; i < previews.length; i++) {
+  if (i > moreBooks) {
+    document
+      .getElementById(`${previews[i].id}`)
+      .classList.add("preview_hidden");
+  }
+}
+
+const loadMore = document.querySelector(".list__button");
+loadMore.textContent = "Load more";
+
+const onClick = (e) => {
+  loaded += 36;
+  let booksLoaded = BOOKS_PER_PAGE + loaded;
+  for (let i = 0; i < previews.length; i++) {
+    if (i < booksLoaded) {
+      document
+        .getElementById(`${previews[i].id}`)
+        .classList.remove("preview_hidden");
+    }
+  }
+};
+
+loadMore.addEventListener("click", onClick);
+
+const previewOverlay = document.querySelector("[data-list-active]");
+
+const openOverlay = (e) => {
+  const id = e.target.closest("[id]");
+  const index = id.dataset.index;
+  const overlayBlur = previewOverlay.querySelector(".overlay__blur");
+  overlayBlur.src = books[index].image;
+  const overlayImage = previewOverlay.querySelector(".overlay__image");
+  overlayImage.src = books[index].image;
+  const titleOverlay = previewOverlay.querySelector(".overlay__title");
+  titleOverlay.textContent = books[index].title;
+  const dateOverlay = previewOverlay.querySelector(".overlay__data");
+  dateOverlay.textContent = books[index].published;
+  const infoOverlay = previewOverlay.querySelector("[data-list-description]");
+  infoOverlay.textContent = books[index].description;
+  previewOverlay.show();
+};
+
+previews.forEach((preview) => {
+  preview.addEventListener("click", openOverlay);
+});
 
 // if (!books && !Array.isArray(books)) throw new Error('Source required')
 // if (!range && range.length < 2) throw new Error('Range must be an array with two numbers')
