@@ -78,26 +78,43 @@ const onClick = (e) => {
 loadMore.addEventListener("click", onClick);
 
 const previewOverlay = document.querySelector("[data-list-active]");
+const closeBtn = document.querySelector(".overlay__button");
 
 const openOverlay = (e) => {
   const id = e.target.closest("[id]");
   const index = id.dataset.index;
+  //Image blur for the overlay
   const overlayBlur = previewOverlay.querySelector(".overlay__blur");
   overlayBlur.src = books[index].image;
+
+  //Image for the overlay
   const overlayImage = previewOverlay.querySelector(".overlay__image");
   overlayImage.src = books[index].image;
+
+  //Title for the overlay
   const titleOverlay = previewOverlay.querySelector(".overlay__title");
   titleOverlay.textContent = books[index].title;
-  const dateOverlay = previewOverlay.querySelector(".overlay__data");
-  dateOverlay.textContent = books[index].published;
+  //The author and date for the overlay
+  const dataOverlay = previewOverlay.querySelector(".overlay__data");
+  let dateOverlay = new Date(books[index].published).getFullYear();
+  dataOverlay.textContent = `${authors[books[index].author]} (${dateOverlay})`;
+
+  //The description of book for the overlay
   const infoOverlay = previewOverlay.querySelector("[data-list-description]");
   infoOverlay.textContent = books[index].description;
+
   previewOverlay.show();
+};
+
+const closeOverlay = (e) => {
+  previewOverlay.close();
 };
 
 previews.forEach((preview) => {
   preview.addEventListener("click", openOverlay);
 });
+
+closeBtn.addEventListener("click", closeOverlay);
 
 // if (!books && !Array.isArray(books)) throw new Error('Source required')
 // if (!range && range.length < 2) throw new Error('Range must be an array with two numbers')
