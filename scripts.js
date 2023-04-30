@@ -1,13 +1,3 @@
-/* Things to do:
- View a list of book previews, by title and author, show new books to read. //
- An image associated with all book previews to recognize a book by the cover. //
- Option of reading a summary of the book.
- Option of seeing the date that a book was published.
- Find books based on specific text phrases.
- Filter books by author.
- Filter books by genre.
- Toggle between dark and light modes.
- */
 
 import { BOOKS_PER_PAGE, authors, genres, books } from "./data.js";
 
@@ -15,15 +5,11 @@ const day = {
   dark: "10, 10, 20",
   light: "255, 255, 255",
 };
-
 const night = {
   dark: "255, 255, 255",
   light: "10, 10, 20",
 };
 
-let currentPage = 1;
-
-const overlay = document.querySelector("[data-list-active]");
 const list = document.querySelector("[data-list-items]");
 
 const innerHTML = (x, y) => {
@@ -49,7 +35,6 @@ books.forEach((book, index) => {
 const previews = list.querySelectorAll(".preview"); // Getting all the books added to the DOM
 
 let loaded = 0;
-
 const moreBooks = BOOKS_PER_PAGE - 1;
 
 for (let i = 0; i < previews.length; i++) {
@@ -64,7 +49,7 @@ const loadMore = document.querySelector(".list__button");
 loadMore.textContent = "Load more";
 
 const onClick = (e) => {
-  loaded += 36;
+  loaded += BOOKS_PER_PAGE;
   let booksLoaded = BOOKS_PER_PAGE + loaded;
   for (let i = 0; i < previews.length; i++) {
     if (i < booksLoaded) {
@@ -86,11 +71,9 @@ const openOverlay = (e) => {
   //Image blur for the overlay
   const overlayBlur = previewOverlay.querySelector(".overlay__blur");
   overlayBlur.src = books[index].image;
-
   //Image for the overlay
   const overlayImage = previewOverlay.querySelector(".overlay__image");
   overlayImage.src = books[index].image;
-
   //Title for the overlay
   const titleOverlay = previewOverlay.querySelector(".overlay__title");
   titleOverlay.textContent = books[index].title;
@@ -98,7 +81,6 @@ const openOverlay = (e) => {
   const dataOverlay = previewOverlay.querySelector(".overlay__data");
   let dateOverlay = new Date(books[index].published).getFullYear();
   dataOverlay.textContent = `${authors[books[index].author]} (${dateOverlay})`;
-
   //The description of book for the overlay
   const infoOverlay = previewOverlay.querySelector("[data-list-description]");
   infoOverlay.textContent = books[index].description;
@@ -106,15 +88,12 @@ const openOverlay = (e) => {
   previewOverlay.show();
 };
 
-const closeOverlay = (e) => {
-  previewOverlay.close();
-};
-
 previews.forEach((preview) => {
   preview.addEventListener("click", openOverlay);
+  closeBtn.addEventListener("click", () =>{
+    previewOverlay.close();
+  });
 });
-
-closeBtn.addEventListener("click", closeOverlay);
 
 // if (!books && !Array.isArray(books)) throw new Error('Source required')
 // if (!range && range.length < 2) throw new Error('Range must be an array with two numbers')
