@@ -4,14 +4,16 @@ import { BOOKS_PER_PAGE, authors, genres, books } from "./data.js";
 const list = document.querySelector("[data-list-items]");
 const loadMore = document.querySelector("[data-list-button]");
 const previewOverlay = document.querySelector("[data-list-active]");
-const closeBtn = document.querySelector("[data-list-close]")
-const overlayBtn = previewOverlay.querySelector('.overlay__button')
-overlayBtn.style.outline = 0; // Fixing the outline bug 
+const closeBtn = document.querySelector("[data-list-close]");
+const overlayBtn = previewOverlay.querySelector(".overlay__button");
+overlayBtn.style.outline = 0; // Fixing the outline bug
 const overlayBlur = previewOverlay.querySelector(".overlay__blur");
 const overlayImage = previewOverlay.querySelector(".overlay__image");
 const titleOverlay = previewOverlay.querySelector(".overlay__title");
 const dataOverlay = previewOverlay.querySelector(".overlay__data");
 const infoOverlay = previewOverlay.querySelector("[data-list-description]");
+const themeBtn = document.querySelector("[data-header-settings]");
+const themeOverlay = document.querySelector("[data-settings-overlay]");
 
 const day = {
   dark: "10, 10, 20",
@@ -52,8 +54,8 @@ const moreBooks = (e) => {
   loaded += BOOKS_PER_PAGE;
   let booksLeft = books.length - BOOKS_PER_PAGE - loaded;
   let btnText = booksLeft > 0 ? booksLeft : 0;
-  loadMore.innerHTML = `<span>Show more</span>
-  <span class = "list__remaining">(${btnText})</span>`;
+  loadMore.querySelector(".list__remaining").textContent = `(${btnText})`;
+
   let booksLoaded = BOOKS_PER_PAGE + loaded;
   for (let i = loaded; i < booksLoaded; i++) {
     list.appendChild(innerHTML(books[i], i));
@@ -82,6 +84,21 @@ list.addEventListener("click", openOverlay);
 closeBtn.addEventListener("click", () => {
   previewOverlay.close();
 });
+themeBtn.addEventListener("click", () => {
+  themeOverlay.show();
+});
+
+data - settings - theme.value === window.matchMedia &&
+window.matchMedia("(prefers-color-scheme: dark)").matches
+  ? "night"
+  : "day";
+let v =
+  window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? "night"
+    : "day";
+
+documentElement.style.setProperty("--color-dark", css[v].dark);
+documentElement.style.setProperty("--color-light", css[v].light);
 
 // if (!books && !Array.isArray(books)) throw new Error('Source required')
 // if (!range && range.length < 2) throw new Error('Range must be an array with two numbers')
@@ -132,11 +149,6 @@ closeBtn.addEventListener("click", () => {
 
 // data-search-authors.appendChild(authors)
 
-// data-settings-theme.value === window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'night' : 'day'
-// v = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches? 'night' | 'day'
-
-// documentElement.style.setProperty('--color-dark', css[v].dark);
-// documentElement.style.setProperty('--color-light', css[v].light);
 // data-list-button = "Show more (books.length - BOOKS_PER_PAGE)"
 
 // data-list-button.disabled = !(matches.length - [page * BOOKS_PER_PAGE] > 0)
