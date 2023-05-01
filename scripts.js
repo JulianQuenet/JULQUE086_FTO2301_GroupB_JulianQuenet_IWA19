@@ -1,5 +1,10 @@
-
 import { BOOKS_PER_PAGE, authors, genres, books } from "./data.js";
+
+//Global query selectors
+const list = document.querySelector("[data-list-items]");
+const loadMore = document.querySelector("[data-list-button]");
+const previewOverlay = document.querySelector("[data-list-active]");
+const closeBtn = document.querySelector("[data-list-close]");
 
 const day = {
   dark: "10, 10, 20",
@@ -10,62 +15,49 @@ const night = {
   light: "10, 10, 20",
 };
 
-const list = document.querySelector("[data-list-items]");
-
-const innerHTML = (x, y) => {
+const innerHTML = (book, index) => {
   const booksElement = document.createElement("div");
-  booksElement.dataset.index = `${y}`;
+  booksElement.dataset.index = `${index}`;
   booksElement.className = "preview";
-  booksElement.id = x.id;
+  booksElement.id = book.id;
   booksElement.innerHTML = ` <img src = ${
-    x.image
-  } class = 'preview__image'  alt="${x.title} book image"></img>
+    book.image
+  } class = 'preview__image'  alt="${book.title} book image"></img>
   <div class="preview__info">
-    <h3 class="preview__title">${x.title}</h3>
-    <div class="preview__author">${authors[x.author]}</div>
+    <h3 class="preview__title">${book.title}</h3>
+    <div class="preview__author">${authors[book.author]}</div>
     </div>`;
   return booksElement;
 };
 
-books.forEach((book, index) => {
-  const bookElement = innerHTML(book, index);
-  list.appendChild(bookElement);
-});
-
-const previews = list.querySelectorAll(".preview"); // Getting all the books added to the DOM
-
-for (let i = 0; i < previews.length; i++) {
-  if (i > BOOKS_PER_PAGE-1) {
-    document
-      .getElementById(`${previews[i].id}`)
-      .classList.add("preview_hidden");
-  }
+for (let i = 0; i < BOOKS_PER_PAGE; i++) {
+  list.appendChild(innerHTML(books[i], i));
 }
 
-const loadMore = document.querySelector(".list__button");
-loadMore.textContent = "Load more";
 let loaded = 0;
 
+loadMore.innerHTML = `<span>Show more</span>
+<span class = "list__remaining">(${
+  books.length - BOOKS_PER_PAGE - loaded
+})</span>`;
 
-const onClick = (e) => {
+const moreBooks = (e) => {
   loaded += BOOKS_PER_PAGE;
+  let booksLeft = books.length - BOOKS_PER_PAGE - loaded;
+  let btnText = booksLeft > 0 ? booksLeft : 0;
+  loadMore.innerHTML = `<span>Show more</span>
+  <span class = "list__remaining">(${btnText})</span>`;
   let booksLoaded = BOOKS_PER_PAGE + loaded;
-  for (let i = 0; i < previews.length - (previews.length - booksLoaded); i++) {
-    if (i < booksLoaded) {
-      document
-        .getElementById(`${previews[i].id}`)
-        .classList.remove("preview_hidden");
+  for (let i = loaded; i < booksLoaded; i++) {
+    list.appendChild(innerHTML(books[i], i));
+    if (i === books.length - 1) {
+      loadMore.disabled = true;
     }
   }
 };
 
-loadMore.addEventListener("click", onClick);
-
-const previewOverlay = document.querySelector("[data-list-active]");
-const closeBtn = document.querySelector(".overlay__button");
-
 const openOverlay = (e) => {
-  const bookPreview = e.target.closest('.preview')
+  const bookPreview = e.target.closest(".preview");
   const index = bookPreview.dataset.index;
   //Image blur for the overlay
   const overlayBlur = previewOverlay.querySelector(".overlay__blur");
@@ -87,11 +79,10 @@ const openOverlay = (e) => {
   previewOverlay.show();
 };
 
-previews.forEach((preview) => {
-  preview.addEventListener("click", openOverlay);
-  closeBtn.addEventListener("click", () =>{
-    previewOverlay.close();
-  });
+loadMore.addEventListener("click", moreBooks);
+list.addEventListener("click", openOverlay);
+closeBtn.addEventListener("click", () => {
+  previewOverlay.close();
 });
 
 // if (!books && !Array.isArray(books)) throw new Error('Source required')
