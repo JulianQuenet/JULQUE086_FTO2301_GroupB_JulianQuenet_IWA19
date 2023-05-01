@@ -4,7 +4,14 @@ import { BOOKS_PER_PAGE, authors, genres, books } from "./data.js";
 const list = document.querySelector("[data-list-items]");
 const loadMore = document.querySelector("[data-list-button]");
 const previewOverlay = document.querySelector("[data-list-active]");
-const closeBtn = document.querySelector("[data-list-close]");
+const closeBtn = document.querySelector("[data-list-close]")
+const overlayBtn = previewOverlay.querySelector('.overlay__button')
+overlayBtn.style.outline = 0; // Fixing the outline bug 
+const overlayBlur = previewOverlay.querySelector(".overlay__blur");
+const overlayImage = previewOverlay.querySelector(".overlay__image");
+const titleOverlay = previewOverlay.querySelector(".overlay__title");
+const dataOverlay = previewOverlay.querySelector(".overlay__data");
+const infoOverlay = previewOverlay.querySelector("[data-list-description]");
 
 const day = {
   dark: "10, 10, 20",
@@ -59,21 +66,12 @@ const moreBooks = (e) => {
 const openOverlay = (e) => {
   const bookPreview = e.target.closest(".preview");
   const index = bookPreview.dataset.index;
-  //Image blur for the overlay
-  const overlayBlur = previewOverlay.querySelector(".overlay__blur");
+
   overlayBlur.src = books[index].image;
-  //Image for the overlay
-  const overlayImage = previewOverlay.querySelector(".overlay__image");
   overlayImage.src = books[index].image;
-  //Title for the overlay
-  const titleOverlay = previewOverlay.querySelector(".overlay__title");
   titleOverlay.textContent = books[index].title;
-  //The author and date for the overlay
-  const dataOverlay = previewOverlay.querySelector(".overlay__data");
   let dateOverlay = new Date(books[index].published).getFullYear();
   dataOverlay.textContent = `${authors[books[index].author]} (${dateOverlay})`;
-  //The description of book for the overlay
-  const infoOverlay = previewOverlay.querySelector("[data-list-description]");
   infoOverlay.textContent = books[index].description;
 
   previewOverlay.show();
