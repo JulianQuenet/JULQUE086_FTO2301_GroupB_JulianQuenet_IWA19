@@ -34,11 +34,8 @@ books.forEach((book, index) => {
 
 const previews = list.querySelectorAll(".preview"); // Getting all the books added to the DOM
 
-let loaded = 0;
-const moreBooks = BOOKS_PER_PAGE - 1;
-
 for (let i = 0; i < previews.length; i++) {
-  if (i > moreBooks) {
+  if (i > BOOKS_PER_PAGE-1) {
     document
       .getElementById(`${previews[i].id}`)
       .classList.add("preview_hidden");
@@ -47,11 +44,13 @@ for (let i = 0; i < previews.length; i++) {
 
 const loadMore = document.querySelector(".list__button");
 loadMore.textContent = "Load more";
+let loaded = 0;
+
 
 const onClick = (e) => {
   loaded += BOOKS_PER_PAGE;
   let booksLoaded = BOOKS_PER_PAGE + loaded;
-  for (let i = 0; i < previews.length; i++) {
+  for (let i = 0; i < previews.length - (previews.length - booksLoaded); i++) {
     if (i < booksLoaded) {
       document
         .getElementById(`${previews[i].id}`)
@@ -66,8 +65,8 @@ const previewOverlay = document.querySelector("[data-list-active]");
 const closeBtn = document.querySelector(".overlay__button");
 
 const openOverlay = (e) => {
-  const id = e.target.closest("[id]");
-  const index = id.dataset.index;
+  const bookPreview = e.target.closest('.preview')
+  const index = bookPreview.dataset.index;
   //Image blur for the overlay
   const overlayBlur = previewOverlay.querySelector(".overlay__blur");
   overlayBlur.src = books[index].image;
