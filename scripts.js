@@ -28,6 +28,7 @@ for (let i = 0; i < BOOKS_PER_PAGE; i++) {
   selectors.list.appendChild(innerHTML(books[i], i));
 }
 
+let filteredBooks = 0;
 let newlyLoaded = 0;
 
 selectors.loadMore.innerHTML = `<span>Show more</span>
@@ -119,6 +120,16 @@ const searchSubmitHandler = (e) => {
   for (let i = 0; i < result.length; i++) {
     selectors.list.appendChild(innerHTML(result[i][0], result[i][1]));
   }
+
+  if (result.length === 0) {
+    selectors.message.classList.add("list__message_show");
+    selectors.loadMore.disabled = true;
+  } else {
+    selectors.message.classList.remove("list__message_show");
+    selectors.loadMore.disabled = false;
+  }
+
+  filteredBooks = result;
 };
 
 // if display.length < 1
