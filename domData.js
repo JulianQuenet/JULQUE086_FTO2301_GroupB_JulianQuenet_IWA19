@@ -1,5 +1,8 @@
-import { genresObj, authors, books } from "./data.js";
+import { genresObj, authors} from "./data.js";
 
+/** 
+ * Object containing all query selectors
+ */
 export const selectors = {
   list: document.querySelector("[data-list-items]"),
   message: document.querySelector("[data-list-message]"),
@@ -44,6 +47,18 @@ export const css = {
 
 document.querySelector(".overlay__button").style.outline = 0; // Fixing the outline bug with the overlay close button
 
+
+
+/**
+ * Function made to insert values from the inputted objects to the newly created 'option' element, a fragment is created
+ * as well and the new options elements with their values are appended to the fragment, the function then returns the 
+ * fragment which can then be appended to the required parent element, the function also takes in a string argument
+ * which is primarily used to create a default option value i.e "All". To get the the values from the objects the function 
+ * runs a loop through the object getting both the key values and the properties of those key values.
+ * @param {string} text 
+ * @param {object} object 
+ * @returns appended element
+ */
 const optionsCreate = (text, object) => {
   const fragment = document.createDocumentFragment();
   const allOption = document.createElement("option");
@@ -64,4 +79,7 @@ const optionsCreate = (text, object) => {
 selectors.genresSelect.appendChild(optionsCreate("All genres", genresObj));
 selectors.authorSelect.appendChild(optionsCreate("All authors", authors));
 
-
+//Set the colors of the preview overlay text to correspond with the theme change 
+selectors.previewOverlay.titleOverlay.style.color = `rgba(var(--color-dark))`
+selectors.previewOverlay.dataOverlay.style.color =  `rgba(var(--color-dark))`
+selectors.previewOverlay.infoOverlay.style.color =  `rgba(var(--color-dark))`

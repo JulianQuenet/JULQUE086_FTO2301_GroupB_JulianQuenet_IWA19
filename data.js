@@ -91,6 +91,7 @@ export const authors = {
   "37018341-31f4-4ffa-8755-a49979c218dd": "Suzanne Collins"
 }
 
+// Changed the name as to avoid confusion with the genres key in the "book" object
 export const genresObj = {
   "a4f80b3e-3e96-4266-b729-e09b71793182": "Economics",
   "6dd5bb6e-0172-4d6e-aa18-26f00954dd7a": "Non-fiction",
