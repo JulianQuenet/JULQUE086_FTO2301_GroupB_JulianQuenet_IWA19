@@ -51,7 +51,7 @@ const moreBooksHandler = (e) => {
   let booksLoaded = BOOKS_PER_PAGE + newlyLoaded;
   //With concern to time complexity this event handler will only ever loop through and append a max of 36 items
   for (let i = newlyLoaded; i < booksLoaded; i++) {
-    if (i === books.length - 1) {
+    if (i === books.length) {
       selectors.loadMore.disabled = true;
       break;
     } else {
@@ -201,7 +201,7 @@ const filterMoreHandler = (e) => {
 
   let booksLoaded = BOOKS_PER_PAGE + filteredLoad;
   for (let i = filteredLoad; i < booksLoaded; i++) {
-    if (i === filteredBooks.length - 1) {
+    if (i === filteredBooks.length) {
       selectors.loadMore.disabled = true;
       break;
     } else {
