@@ -181,6 +181,7 @@ const searchSubmitHandler = (e) => {
   }
 
   overlay.close();
+  window.scrollTo({top: 0,behavior: "smooth"});
   filteredLoad = 0; // Is given a value of zero each time it's loaded 
   formValues = filters; // formValues receives the same data as the filters variable i.e gets used in the searchToggleHandler
 };
