@@ -1,37 +1,53 @@
-import { genresObj, authors} from "./data.js";
+//@ts-check
 
-/** 
+import { genresObj, authors } from "./data.js";
+
+/**
+ * Function that gets the needed element from the DOM
+ *
+ * @param {string} label -Represent the identifying element from the DOM
+ * @returns {HTMLElement}
+ */
+const getHtmlElement = (label) => {
+  const node = document.querySelector(`[${label}]`);
+  if (!(node instanceof HTMLElement)){
+    throw new Error(`${label} element not found in HTML`);
+  }
+  return node;
+};
+
+/**
  * Object containing all query selectors
  */
 export const selectors = {
-  list: document.querySelector("[data-list-items]"),
-  message: document.querySelector("[data-list-message]"),
-  loadMore: document.querySelector("[data-list-button]"),
+  list: getHtmlElement("data-list-items"),
+  message: getHtmlElement("data-list-message"),
+  loadMore: getHtmlElement("data-list-button"),
   previewOverlay: {
-    overlay: document.querySelector("[data-list-active]"),
-    overlayBtn: document.querySelector("[data-list-close]"),
-    overlayBlur: document.querySelector("[data-list-blur]"),
-    overlayImage: document.querySelector("[data-list-image]"),
-    titleOverlay: document.querySelector("[data-list-title]"),
-    dataOverlay: document.querySelector("[data-list-subtitle]"),
-    infoOverlay: document.querySelector("[data-list-description]"),
+    overlay: getHtmlElement("data-list-active"),
+    overlayBtn: getHtmlElement("data-list-close"),
+    overlayBlur: getHtmlElement("data-list-blur"),
+    overlayImage: getHtmlElement("data-list-image"),
+    titleOverlay: getHtmlElement("data-list-title"),
+    dataOverlay: getHtmlElement("data-list-subtitle"),
+    infoOverlay: getHtmlElement("data-list-description"),
   },
   theme: {
-    themeBtn: document.querySelector("[data-header-settings]"),
-    themeOverlay: document.querySelector("[data-settings-overlay]"),
-    themeCancelBtn: document.querySelector("[data-settings-cancel]"),
-    themeForm: document.querySelector("[data-settings-form]"),
-    themeSelect: document.querySelector("[data-settings-theme]"),
+    themeBtn: getHtmlElement("data-header-settings"),
+    themeOverlay: getHtmlElement("data-settings-overlay"),
+    themeCancelBtn: getHtmlElement("data-settings-cancel"),
+    themeForm: getHtmlElement("data-settings-form"),
+    themeSelect: getHtmlElement("data-settings-theme"),
   },
   search: {
-    searchBtn: document.querySelector("[data-header-search]"),
-    searchOverlay: document.querySelector("[data-search-overlay]"),
-    searchCancelBtn: document.querySelector("[data-search-cancel]"),
-    searchForm: document.querySelector("[data-search-form]"),
+    searchBtn: getHtmlElement("data-header-search"),
+    searchOverlay: getHtmlElement("data-search-overlay"),
+    searchCancelBtn: getHtmlElement("data-search-cancel"),
+    searchForm: getHtmlElement("data-search-form"),
   },
-  genresSelect: document.querySelector("[data-search-genres]"),
-  authorSelect: document.querySelector("[data-search-authors]"),
-  title: document.querySelector("[data-search-title]"),
+  genresSelect: getHtmlElement("data-search-genres"),
+  authorSelect: getHtmlElement("data-search-authors"),
+  title: getHtmlElement("data-search-title"),
 };
 
 export const css = {
@@ -45,19 +61,18 @@ export const css = {
   },
 };
 
+// @ts-ignore
 document.querySelector(".overlay__button").style.outline = 0; // Fixing the outline bug with the overlay close button
-
-
 
 /**
  * Function made to insert values from the inputted objects to the newly created 'option' element, a fragment is created
- * as well and the new options elements with their values are appended to the fragment, the function then returns the 
+ * as well and the new options elements with their values are appended to the fragment, the function then returns the
  * fragment which can then be appended to the required parent element, the function also takes in a string argument
- * which is primarily used to create a default option value i.e "All". To get the the values from the objects the function 
+ * which is primarily used to create a default option value i.e "All". To get the the values from the objects the function
  * runs a loop through the object getting both the key values and the properties of those key values.
- * @param {string} text 
- * @param {object} object 
- * @returns appended element
+ * @param {string} text
+ * @param {object} object
+ * @returns {HTMLElement}
  */
 const optionsCreate = (text, object) => {
   const fragment = document.createDocumentFragment();
@@ -73,13 +88,14 @@ const optionsCreate = (text, object) => {
     fragment.appendChild(option);
   }
 
+  // @ts-ignore
   return fragment;
 };
 
 selectors.genresSelect.appendChild(optionsCreate("All genres", genresObj));
 selectors.authorSelect.appendChild(optionsCreate("All authors", authors));
 
-//Set the colors of the preview overlay text to correspond with the theme change 
-selectors.previewOverlay.titleOverlay.style.color = `rgba(var(--color-dark))`
-selectors.previewOverlay.dataOverlay.style.color =  `rgba(var(--color-dark))`
-selectors.previewOverlay.infoOverlay.style.color =  `rgba(var(--color-dark))`
+//Set the colors of the preview overlay text to correspond with the theme change
+selectors.previewOverlay.titleOverlay.style.color = `rgba(var(--color-dark))`;
+selectors.previewOverlay.dataOverlay.style.color = `rgba(var(--color-dark))`;
+selectors.previewOverlay.infoOverlay.style.color = `rgba(var(--color-dark))`;

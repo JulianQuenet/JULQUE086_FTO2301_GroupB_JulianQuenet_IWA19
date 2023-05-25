@@ -10,7 +10,7 @@ import { selectors, css } from "./domData.js";
  * 
  * @param {object} book 
  * @param {number} index 
- * @returns newly created element
+ * @returns {HTMLElement}
  */
 const innerHTML = (book, index) => {
   const booksElement = document.createElement("div");
