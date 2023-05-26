@@ -9,7 +9,7 @@ import { genresObj, authors } from "./data.js";
  * @returns {HTMLElement}
  */
 const getHtmlElement = (label) => {
-  const node = document.querySelector(`[${label}]`);
+  const node = document.querySelector(`${label}`);
   if (!(node instanceof HTMLElement)){
     throw new Error(`${label} element not found in HTML`);
   }
@@ -20,34 +20,35 @@ const getHtmlElement = (label) => {
  * Object containing all query selectors
  */
 export const selectors = {
-  list: getHtmlElement("data-list-items"),
-  message: getHtmlElement("data-list-message"),
-  loadMore: getHtmlElement("data-list-button"),
+  list: getHtmlElement("[data-list-items]"),
+  message: getHtmlElement("[data-list-message]"),
+  loadMore: getHtmlElement("[data-list-button]"),
   previewOverlay: {
-    overlay: getHtmlElement("data-list-active"),
-    overlayBtn: getHtmlElement("data-list-close"),
-    overlayBlur: getHtmlElement("data-list-blur"),
-    overlayImage: getHtmlElement("data-list-image"),
-    titleOverlay: getHtmlElement("data-list-title"),
-    dataOverlay: getHtmlElement("data-list-subtitle"),
-    infoOverlay: getHtmlElement("data-list-description"),
+    overlay: getHtmlElement("[data-list-active]"),
+    overlayBtn: getHtmlElement("[data-list-close]"),
+    overlayBlur: getHtmlElement("[data-list-blur]"),
+    overlayImage: getHtmlElement("[data-list-image]"),
+    titleOverlay: getHtmlElement("[data-list-title]"),
+    dataOverlay: getHtmlElement("[data-list-subtitle]"),
+    infoOverlay: getHtmlElement("[data-list-description]"),
   },
   theme: {
-    themeBtn: getHtmlElement("data-header-settings"),
-    themeOverlay: getHtmlElement("data-settings-overlay"),
-    themeCancelBtn: getHtmlElement("data-settings-cancel"),
-    themeForm: getHtmlElement("data-settings-form"),
-    themeSelect: getHtmlElement("data-settings-theme"),
+    themeBtn: getHtmlElement("[data-header-settings]"),
+    themeOverlay: getHtmlElement("[data-settings-overlay]"),
+    themeCancelBtn: getHtmlElement("[data-settings-cancel]"),
+    themeForm: getHtmlElement("[data-settings-form]"),
+    themeSelect: getHtmlElement("[data-settings-theme]"),
   },
   search: {
-    searchBtn: getHtmlElement("data-header-search"),
-    searchOverlay: getHtmlElement("data-search-overlay"),
-    searchCancelBtn: getHtmlElement("data-search-cancel"),
-    searchForm: getHtmlElement("data-search-form"),
+    searchBtn: getHtmlElement("[data-header-search]"),
+    searchOverlay: getHtmlElement("[data-search-overlay]"),
+    searchCancelBtn: getHtmlElement("[data-search-cancel]"),
+    searchForm: getHtmlElement("[data-search-form]"),
   },
-  genresSelect: getHtmlElement("data-search-genres"),
-  authorSelect: getHtmlElement("data-search-authors"),
-  title: getHtmlElement("data-search-title"),
+  genresSelect: getHtmlElement("[data-search-genres]"),
+  authorSelect: getHtmlElement("[data-search-authors]"),
+  title: getHtmlElement("[data-search-title]"),
+  outline: getHtmlElement(".overlay__button")
 };
 
 export const css = {

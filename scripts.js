@@ -9,21 +9,21 @@ import { selectors, css } from "./domData.js";
  * in the inputted values to add unique attributes to the created element i.e. class name and or 
  * dataset. The function returns the booksElement which can be later appended to the chosen parent element.
  * 
- * @param {object} book 
+ * @param {object} prop
  * @param {number} index 
  * @returns {HTMLElement}
  */
-const innerHTML = (book, index) => {
+const innerHTML = (prop, index) => {
   const booksElement = document.createElement("div");
   booksElement.dataset.index = `${index}`; // Retrieving the index to make it easier to fetch data for future use 
   booksElement.className = "preview";
-  booksElement.id = book.id;
+  booksElement.id = prop.id;
   booksElement.innerHTML = ` <img src = ${
-    book.image
-  } class = 'preview__image'  alt="${book.title} book image"></img>
+    prop.image
+  } class = 'preview__image'  alt="${prop.title} book image"></img>
   <div class="preview__info">
-    <h3 class="preview__title">${book.title}</h3>
-    <div class="preview__author">${authors[book.author]}</div>
+    <h3 class="preview__title">${prop.title}</h3>
+    <div class="preview__author">${authors[prop.author]}</div>
     </div>`;
   return booksElement;
 };
