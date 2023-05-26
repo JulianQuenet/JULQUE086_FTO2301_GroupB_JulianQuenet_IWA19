@@ -72,7 +72,7 @@ document.querySelector(".overlay__button").style.outline = 0; // Fixing the outl
  * runs a loop through the object getting both the key values and the properties of those key values.
  * @param {string} text
  * @param {object} object
- * @returns {HTMLElement}
+ * @returns {DocumentFragment}
  */
 const optionsCreate = (text, object) => {
   const fragment = document.createDocumentFragment();
@@ -88,7 +88,6 @@ const optionsCreate = (text, object) => {
     fragment.appendChild(option);
   }
 
-  // @ts-ignore
   return fragment;
 };
 
