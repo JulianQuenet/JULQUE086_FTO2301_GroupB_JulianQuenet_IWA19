@@ -1,57 +1,17 @@
-
 import { BOOKS_PER_PAGE, authors, books } from "./data.js";
-import { selectors, css } from "./domData.js";
+import { selectors, css, innerHTML } from "./domData.js";
+import { loadedTracker } from "./helpers.js";
 
-
-
-/** Function made to create the innerHtml for the created element(booksElement) in the function and insert the values inputted
- * to the areas required in order to display correctly in the html/DOM, this function will also take
- * in the inputted values to add unique attributes to the created element i.e. class name and or 
- * dataset. The function returns the booksElement which can be later appended to the chosen parent element.
- * 
- * @param {object} prop
- * @param {number} index 
- * @returns {HTMLElement}
- */
-const innerHTML = (prop, index) => {
-  const booksElement = document.createElement("div");
-  booksElement.dataset.index = `${index}`; // Retrieving the index to make it easier to fetch data for future use 
-  booksElement.className = "preview";
-  booksElement.id = prop.id;
-  booksElement.innerHTML = ` <img src = ${
-    prop.image
-  } class = 'preview__image'  alt="${prop.title} book image"></img>
-  <div class="preview__info">
-    <h3 class="preview__title">${prop.title}</h3>
-    <div class="preview__author">${authors[prop.author]}</div>
-    </div>`;
-  return booksElement;
-};
-
-// Initial loading of the first 36 books 
-for (let i = 0; i < BOOKS_PER_PAGE; i++) {
-  selectors.list.appendChild(innerHTML(books[i], i)); 
-}
-
-// Changing the text content of the "Show more" button
-selectors.loadMore.innerHTML = `<span>Show more</span>
-<span class = "list__remaining">(${books.length - BOOKS_PER_PAGE})</span>`;
-
-
-let newlyLoaded = 0;
 //------------------------------------------------All eventHandlers below-------------------------------------------------------
 
+const previewLoading = loadedTracker(books)
 // loads more books when the loadMore button is clicked
 const moreBooksHandler = (e) => {
   e.stopPropagation();
-  newlyLoaded += BOOKS_PER_PAGE; // Once clicked the newlyLoaded is incremented by BOOKS_PER_PAGE to keep track of books added
-  let booksLeft = books.length - BOOKS_PER_PAGE - newlyLoaded; 
-  let btnText = booksLeft > 0 ? booksLeft : 0;
-  selectors.loadMore.querySelector(".list__remaining").textContent = `(${btnText})`;
-  
-  let booksLoaded = BOOKS_PER_PAGE + newlyLoaded;
+  previewLoading.increase()
+  previewLoading.checker()
   //With concern to time complexity this event handler will only ever loop through and append a max of 36 items
-  for (let i = newlyLoaded; i < booksLoaded; i++) {
+  for (let i = previewLoading.refValue() ; i < previewLoading.loaded(); i++) {
     if (i === books.length) {
       selectors.loadMore.disabled = true;
       break;
@@ -82,7 +42,9 @@ const openOverlayHandler = (e) => {
 // Opens the theme settings and sets it's values
 const themeToggleHandler = (e) => {
   // Checks to see if backgroundColor matches that of the set 'night' color scheme
-  const darkMode =getComputedStyle(document.body).backgroundColor ===`rgb(${css.night.light})`;
+  const darkMode =
+    getComputedStyle(document.body).backgroundColor ===
+    `rgb(${css.night.light})`;
   selectors.theme.themeSelect.value = darkMode ? "night" : "day";
 
   const overlay = selectors.theme.themeOverlay;
@@ -106,26 +68,27 @@ const themeSubmitHandler = (e) => {
   overlay.close();
 };
 
-let formValues;//Will only be truthy when the searchFrom is submitted
+let formValues; //Will only be truthy when the searchFrom is submitted
 
-//Opens/closes the filter form 
+//Opens/closes the filter form
 const searchToggleHandler = (e) => {
   const overlay = selectors.search.searchOverlay;
   const closeBtn = selectors.search.searchCancelBtn;
   overlay.show();
-  if (formValues) { // The values are based on what was entered into the form
+  if (formValues) {
+    // The values are based on what was entered into the form
     selectors.genresSelect.value = formValues.genre;
     selectors.authorSelect.value = formValues.author;
     selectors.title.value = formValues.title;
   }
   if (e.target === closeBtn) {
     overlay.close();
-    selectors.search.searchForm.reset()
+    selectors.search.searchForm.reset();
   }
 };
 
 let filteredBooks; // Will only be truthy when searchForm is submitted
-let filteredLoad; // Will only receive a value when the searchForm is submitted
+let filterLoading;
 
 const searchSubmitHandler = (e) => {
   e.preventDefault();
@@ -135,24 +98,28 @@ const searchSubmitHandler = (e) => {
   const result = [];
   books.forEach((book, index) => {
     const { title, author, genres } = book;
-    const categories = [...genres];//Spread operator to make sifting through the data easier instead of using a for of loop
+    const categories = [...genres]; //Spread operator to make sifting through the data easier instead of using a for of loop
 
-    const genreMatch =categories.includes(filters.genre) || filters.genre === "All";
+    const genreMatch =
+      categories.includes(filters.genre) || filters.genre === "All";
     const authorMatch = author === filters.author || filters.author === "All";
-    const titleMatch =title.toLowerCase().includes(filters.title.toLowerCase()) || filters.title === "";
-  //Only if all three are true will the data get pushed to the array
+    const titleMatch =
+      title.toLowerCase().includes(filters.title.toLowerCase()) ||
+      filters.title === "";
+    //Only if all three are true will the data get pushed to the array
     if (authorMatch && genreMatch && titleMatch) {
       result.push([book, index]);
     }
   });
-//---------------------------------------------Retrieving and manipulating data above this line-----------------------------------------
-//-----------------------------------------------Below this line: Conditionals and actions----------------------------------------------
+  //---------------------------------------------Retrieving and manipulating data above this line-----------------------------------------
+  //-----------------------------------------------Below this line: Conditionals and actions----------------------------------------------
   const previews = selectors.list.querySelectorAll(".preview");
   for (const book of previews) {
-    book.remove();//Upon submission all previous books are removed 
+    book.remove(); //Upon submission all previous books are removed
   }
 
-  if (result.length === 0) { // If no matches are found the needed message pops up and loadMore button is disabled
+  if (result.length === 0) {
+    // If no matches are found the needed message pops up and loadMore button is disabled
     selectors.message.classList.add("list__message_show");
     selectors.loadMore.disabled = true;
     selectors.loadMore.querySelector(".list__remaining").textContent = `(0)`;
@@ -161,7 +128,8 @@ const searchSubmitHandler = (e) => {
     selectors.loadMore.disabled = false;
   }
 
-  if (result.length < BOOKS_PER_PAGE) { // Loads and appends books and disables the button
+  if (result.length < BOOKS_PER_PAGE) {
+    // Loads and appends books and disables the button
     for (let i = 0; i < result.length; i++) {
       let book = result[i][0];
       let index = result[i][1];
@@ -171,37 +139,33 @@ const searchSubmitHandler = (e) => {
     }
   } else {
     //If there are more books than 36, then 36 are loaded, the rest are loaded with a "new" eventListener
-    for (let i = 0; i < BOOKS_PER_PAGE; i++) { 
+    for (let i = 0; i < BOOKS_PER_PAGE; i++) {
       let book = result[i][0];
       let index = result[i][1];
       selectors.list.appendChild(innerHTML(book, index));
-      selectors.loadMore.querySelector(".list__remaining").textContent = `(${result.length - BOOKS_PER_PAGE})`;
-      selectors.loadMore.removeEventListener("click", moreBooksHandler);//Old eventListener is removed
+      selectors.loadMore.querySelector(".list__remaining").textContent = `(${
+        result.length - BOOKS_PER_PAGE
+      })`;
+      selectors.loadMore.removeEventListener("click", moreBooksHandler); //Old eventListener is removed
       filteredBooks = result;
+      filterLoading = loadedTracker(filteredBooks) 
     }
   }
 
   overlay.close();
-  window.scrollTo({top: 0,behavior: "smooth"});
-  filteredLoad = 0; // Is given a value of zero each time it's loaded 
+  window.scrollTo({ top: 0, behavior: "smooth" });
   formValues = filters; // formValues receives the same data as the filters variable i.e gets used in the searchToggleHandler
 };
 
-
 //Same concept as the moreBooksHandler but only runs if filteredBooks is truthy
+
 const filterMoreHandler = (e) => {
   if (!filteredBooks) {
     return;
   }
-  filteredLoad += BOOKS_PER_PAGE;
-  let booksLeft = filteredBooks.length - BOOKS_PER_PAGE - filteredLoad;
-  let btnText = booksLeft > 0 ? booksLeft : 0;
-  selectors.loadMore.querySelector(
-    ".list__remaining"
-  ).textContent = `(${btnText})`;
-
-  let booksLoaded = BOOKS_PER_PAGE + filteredLoad;
-  for (let i = filteredLoad; i < booksLoaded; i++) {
+  filterLoading.increase()
+  filterLoading.checker()
+  for (let i = filterLoading.refValue(); i < filterLoading.loaded(); i++) {
     if (i === filteredBooks.length) {
       selectors.loadMore.disabled = true;
       break;
@@ -212,8 +176,6 @@ const filterMoreHandler = (e) => {
     }
   }
 };
-
-
 
 //------------------------------------------------All eventListeners fall below----------------------------------------------------
 

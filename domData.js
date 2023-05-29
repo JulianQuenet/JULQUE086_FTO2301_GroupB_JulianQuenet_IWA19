@@ -1,16 +1,18 @@
 //@ts-check
 
-import { genresObj, authors } from "./data.js";
+import { genresObj, authors, books, BOOKS_PER_PAGE } from "./data.js";
 
 /**
  * Function that gets the needed element from the DOM
  *
  * @param {string} label -Represent the identifying element from the DOM
+ * @param {HTMLElement} [target]
  * @returns {HTMLElement}
  */
-const getHtmlElement = (label) => {
-  const node = document.querySelector(`${label}`);
-  if (!(node instanceof HTMLElement)){
+export const getHtmlElement = (label, target) => {
+  const scope = target || document;
+  const node = scope.querySelector(`${label}`);
+  if (!(node instanceof HTMLElement)) {
     throw new Error(`${label} element not found in HTML`);
   }
   return node;
@@ -48,7 +50,7 @@ export const selectors = {
   genresSelect: getHtmlElement("[data-search-genres]"),
   authorSelect: getHtmlElement("[data-search-authors]"),
   title: getHtmlElement("[data-search-title]"),
-  outline: getHtmlElement(".overlay__button")
+  outline: getHtmlElement(".overlay__button"),
 };
 
 export const css = {
@@ -62,8 +64,7 @@ export const css = {
   },
 };
 
-// @ts-ignore
-document.querySelector(".overlay__button").style.outline = 0; // Fixing the outline bug with the overlay close button
+selectors.outline.style.outline = "0"; // Fixing the outline bug with the overlay close button
 
 /**
  * Function made to insert values from the inputted objects to the newly created 'option' element, a fragment is created
@@ -99,3 +100,44 @@ selectors.authorSelect.appendChild(optionsCreate("All authors", authors));
 selectors.previewOverlay.titleOverlay.style.color = `rgba(var(--color-dark))`;
 selectors.previewOverlay.dataOverlay.style.color = `rgba(var(--color-dark))`;
 selectors.previewOverlay.infoOverlay.style.color = `rgba(var(--color-dark))`;
+
+/** Function made to create the innerHtml for the created element(booksElement) in the function and insert the values inputted
+ * to the areas required in order to display correctly in the html/DOM, this function will also take
+ * in the inputted values to add unique attributes to the created element i.e. class name and or 
+ * dataset. The function returns the booksElement which can be later appended to the chosen parent element.
+ * 
+@param {Object} prop - The book (in the form of an object).
+ * @param {string} prop.id - The unique identifier of the book.
+ * @param {string} prop.image - The URL of the book's image.
+ * @param {string} prop.title - The title of the book.
+ * @param {string} prop.author - The author of the book represented by a UUID, which correlates with the key values in the authors Object
+ * @param {number} index - The index associated with the book.
+ * @returns {HTMLElement} - The created booksElement.
+ */
+export const innerHTML = (prop, index) => {
+  if (typeof prop !== "object" || prop === null) {
+    throw new Error(`${prop} needed to be an object with the following properties
+    id, title, author. Expected an object, received ${typeof prop}.`);
+  }
+  const { id, image, title, author } = prop;
+
+  const booksElement = document.createElement("div");
+  booksElement.dataset.index = `${index}`; // Retrieving the index to make it easier to fetch data for future use
+  booksElement.className = "preview";
+  booksElement.id = id;
+  booksElement.innerHTML = ` <img src = ${image} class = 'preview__image'  alt="${title} book image"></img>
+  <div class="preview__info">
+    <h3 class="preview__title">${title}</h3>
+    <div class="preview__author">${authors[author]}</div>
+    </div>`;
+  return booksElement;
+};
+
+// Initial loading of the first 36 books
+for (let i = 0; i < BOOKS_PER_PAGE; i++) {
+  selectors.list.appendChild(innerHTML(books[i], i));
+}
+
+// Changing the text content of the "Show more" button
+selectors.loadMore.innerHTML = `<span>Show more</span>
+<span class = "list__remaining">(${books.length - BOOKS_PER_PAGE})</span>`;
