@@ -1,17 +1,17 @@
-import { BOOKS_PER_PAGE, authors, books } from "./data.js";
-import { selectors, css, innerHTML } from "./domData.js";
-import { loadedTracker } from "./helpers.js";
+import { BOOKS_PER_PAGE, authors, books } from "./modules/data.js";
+import { selectors, css, innerHTML } from "./modules/domData.js";
+import { loadedTracker } from "./modules/helpers.js";
 
 //------------------------------------------------All eventHandlers below-------------------------------------------------------
 
-const previewLoading = loadedTracker(books)
+const previewLoading = loadedTracker(books);
 // loads more books when the loadMore button is clicked
 const moreBooksHandler = (e) => {
   e.stopPropagation();
-  previewLoading.increase()
-  previewLoading.checker()
+  previewLoading.increase();
+  previewLoading.checker();
   //With concern to time complexity this event handler will only ever loop through and append a max of 36 items
-  for (let i = previewLoading.refValue() ; i < previewLoading.loaded(); i++) {
+  for (let i = previewLoading.refValue(); i < previewLoading.loaded(); i++) {
     if (i === books.length) {
       selectors.loadMore.disabled = true;
       break;
@@ -148,7 +148,7 @@ const searchSubmitHandler = (e) => {
       })`;
       selectors.loadMore.removeEventListener("click", moreBooksHandler); //Old eventListener is removed
       filteredBooks = result;
-      filterLoading = loadedTracker(filteredBooks) 
+      filterLoading = loadedTracker(filteredBooks);
     }
   }
 
@@ -163,8 +163,8 @@ const filterMoreHandler = (e) => {
   if (!filteredBooks) {
     return;
   }
-  filterLoading.increase()
-  filterLoading.checker()
+  filterLoading.increase();
+  filterLoading.checker();
   for (let i = filterLoading.refValue(); i < filterLoading.loaded(); i++) {
     if (i === filteredBooks.length) {
       selectors.loadMore.disabled = true;
