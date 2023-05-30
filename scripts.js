@@ -1,5 +1,5 @@
 import { BOOKS_PER_PAGE, authors, books } from "./modules/data.js";
-import { selectors, css, innerHTML } from "./modules/domData.js";
+import { selectors, css, BookPreview } from "./modules/domData.js";
 import { loadedTracker } from "./modules/helpers.js";
 
 //------------------------------------------------All eventHandlers below-------------------------------------------------------
@@ -15,8 +15,13 @@ const moreBooksHandler = (e) => {
     if (i === books.length) {
       selectors.loadMore.disabled = true;
       break;
-    } else {
-      selectors.list.appendChild(innerHTML(books[i], i));
+    }else{
+      const bookPreview = new BookPreview();
+      const prop = books[i];
+      const index = i;
+      bookPreview.setAttribute('prop', JSON.stringify(prop));
+      bookPreview.setAttribute('index', index);
+      selectors.list.appendChild(bookPreview);
     }
   }
 };
@@ -131,18 +136,24 @@ const searchSubmitHandler = (e) => {
   if (result.length < BOOKS_PER_PAGE) {
     // Loads and appends books and disables the button
     for (let i = 0; i < result.length; i++) {
-      let book = result[i][0];
-      let index = result[i][1];
-      selectors.list.appendChild(innerHTML(book, index));
+      const bookPreview = new BookPreview();
+      const prop = result[i][0];
+      const index = result[i][1];
+      bookPreview.setAttribute('prop', JSON.stringify(prop));
+      bookPreview.setAttribute('index', index);
+      selectors.list.appendChild(bookPreview);
       selectors.loadMore.disabled = true;
       selectors.loadMore.querySelector(".list__remaining").textContent = `(0)`;
     }
   } else {
     //If there are more books than 36, then 36 are loaded, the rest are loaded with a "new" eventListener
     for (let i = 0; i < BOOKS_PER_PAGE; i++) {
-      let book = result[i][0];
-      let index = result[i][1];
-      selectors.list.appendChild(innerHTML(book, index));
+      const bookPreview = new BookPreview();
+      const prop = result[i][0];
+      const index = result[i][1];
+      bookPreview.setAttribute('prop', JSON.stringify(prop));
+      bookPreview.setAttribute('index', index);
+      selectors.list.appendChild(bookPreview);
       selectors.loadMore.querySelector(".list__remaining").textContent = `(${
         result.length - BOOKS_PER_PAGE
       })`;
@@ -170,9 +181,12 @@ const filterMoreHandler = (e) => {
       selectors.loadMore.disabled = true;
       break;
     } else {
-      let book = filteredBooks[i][0];
-      let index = filteredBooks[i][1];
-      selectors.list.appendChild(innerHTML(book, index));
+      const bookPreview = new BookPreview();
+      const prop = filteredBooks[i][0];
+      const index = filteredBooks[i][1];
+      bookPreview.setAttribute('prop', JSON.stringify(prop));
+      bookPreview.setAttribute('index', index);
+      selectors.list.appendChild(bookPreview);;
     }
   }
 };
