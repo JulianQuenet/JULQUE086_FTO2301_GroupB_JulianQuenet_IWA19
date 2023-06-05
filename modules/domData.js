@@ -105,9 +105,15 @@ selectors.previewOverlay.infoOverlay.style.color = `rgba(var(--color-dark))`;
 const preview = document.createElement('template')
 preview.innerHTML = `
 <style> 
+
+*{
+  box-sizing: border-box
+}
+
 .preview {
   border-width: 0;
   width: 100%;
+  height: 100%;
   font-family: Roboto, sans-serif;
   padding: 0.5rem 1rem;
   display: flex;
@@ -117,12 +123,6 @@ preview.innerHTML = `
   border-radius: 8px;
   border: 1px solid rgba(var(--color-dark), 0.15);
   background: rgba(var(--color-light), 1);
-}
-
-@media (min-width: 60rem) {
-  .preview {
-    padding: 1rem;
-  }
 }
 
 .preview_hidden {
@@ -159,12 +159,14 @@ preview.innerHTML = `
 
 .preview__author {
   color: rgba(var(--color-dark), 0.4);
-} </style>
-
+}
+</style>
+<div class = "preview">
 <img src=""  class="preview__image" ></img>
 <div class="preview__info">
   <h3 class="preview__title"></h3>
   <div class="preview__author"></div>
+  </div> 
   </div>`;
   
   export class BookPreview extends HTMLElement {
