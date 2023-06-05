@@ -3,7 +3,7 @@ import { BOOKS_PER_PAGE } from "./data.js";
 
 /**
  *
- * @param {Array} prop
+ * @param {Object} prop
  * @param {Number} [target]
  * @returns {Object}
  */
